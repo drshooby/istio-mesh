@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -euo pipefail
+
+if [[ $# -ne 1 ]]; then
+  echo "Usage: $0 <PROJECT_ID>"
+  exit 1
+fi
+
+PROJECT_ID="$1"
+
+# Set quota project and gcloud default project
+gcloud auth application-default set-quota-project "$PROJECT_ID"
+gcloud config set project "$PROJECT_ID"
+
+# Verify
+CORE_PROJECT=$(gcloud config list --format="value(core.project)")
+
+if [[ "$PROJECT_ID" == "$CORE_PROJECT" ]]; then
+  echo "Gcloud is good to go!"
+else
+  echo "Your PROJECT_ID doesn't match the found core project ${CORE_PROJECT}"
+fi
