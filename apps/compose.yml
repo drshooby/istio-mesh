@@ -1,0 +1,12 @@
+services:
+  ms1:
+    build: ./ms1
+    container_name: ms1
+    ports:
+      - "8000:8000"
+
+  ms2:
+    build: ./ms2
+    container_name: ms2
+    ports:
+      - "8001:8001"
