@@ -1,0 +1,31 @@
+#!/bin/bash
+
+set -euo pipefail
+
+if [[ $# -lt 2 ]]; then
+  echo "Usage: $0 <PROJECT_ID> <SERVICE_ACCOUNT_NAME> [REGION]"
+  exit 1
+fi
+
+PROJECT_ID="$1"
+SERVICE_ACCOUNT_NAME="$2"
+REGION="${3:-us-west1}"
+KEY_PATH="../artifact_pusher_key.json"
+
+# Prevent overwriting
+if [[ -f "$KEY_PATH" ]]; then
+  echo "Error: Key file $KEY_PATH already exists. Remove it first or choose a different path."
+  exit 1
+fi
+
+# Create service account key
+gcloud iam service-accounts keys create "$KEY_PATH" \
+  --iam-account "${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
+
+echo "Service account key created at $KEY_PATH"
+
+# Authenticate Docker
+gcloud auth activate-service-account --key-file "$KEY_PATH"
+gcloud auth configure-docker "${REGION}-docker.pkg.dev"
+
+echo "Docker is now authenticated with Artifact Registry in region $REGION"
