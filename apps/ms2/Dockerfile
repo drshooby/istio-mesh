@@ -8,6 +8,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-EXPOSE 8000
+EXPOSE 8001
 
 CMD ["fastapi","run","main.py","--port","8001","--host","0.0.0.0"]
