@@ -1,0 +1,21 @@
+#!/bin/bash
+set -euo pipefail
+
+APP_DIRS=$(cd ../apps && ls -d ms*/ | sed 's:/$::')
+
+PROJECT_ID="$1"
+REPOSITORY="$2"
+REGION="${3:-us-west1}"
+TAG="${4:-latest}"
+
+for dir in $APP_DIRS; do
+  IMAGE_NAME="istio-practice-$dir"
+  FULL_IMAGE="${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY}/${IMAGE_NAME}:${TAG}"
+
+  APP_PATH="../apps/$dir"
+
+  echo "Building image: ${IMAGE_NAME}"
+
+  docker build --platform linux/amd64 -t "$FULL_IMAGE" "$APP_PATH"
+  docker push "$FULL_IMAGE"
+done
