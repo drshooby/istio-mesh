@@ -1,0 +1,35 @@
+#!/bin/bash
+
+set -euo pipefail
+
+# NOTE: must have project-level permissions here
+
+if [[ $# -lt 2 ]]; then
+  echo "Usage: $0 <PROJECT_ID> <SERVICE_ACCOUNT_NAME> [REGION]"
+  exit 1
+fi
+
+PROJECT_ID="$1"
+SERVICE_ACCOUNT_NAME="$2"
+REGION="${3:-us-west1}"
+KEY_PATH="../artifact_reader_key.json"
+
+# Prevent overwriting
+if [[ -f "$KEY_PATH" ]]; then
+  echo "Error: Key file $KEY_PATH already exists. Remove it first or choose a different path."
+  exit 1
+fi
+
+# Create service account key
+gcloud iam service-accounts keys create "$KEY_PATH" \
+  --iam-account "${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
+
+echo "Service account key created at $KEY_PATH"
+
+echo "Use this key to create a docker-registry secret in k3d:"
+echo "kubectl create secret docker-registry artifact-registry-secret \\"
+echo "  --docker-server=${REGION}-docker.pkg.dev \\"
+echo "  --docker-username=_json_key \\"
+echo "  --docker-password=\"\$(cat $KEY_PATH)\" \\"
+echo "  --docker-email=you@example.com"
+echo "  -n app"
