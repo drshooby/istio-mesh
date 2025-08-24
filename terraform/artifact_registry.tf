@@ -10,6 +10,7 @@ resource "google_artifact_registry_repository" "istio-practice-apps" {
   }
 }
 
+// For local push
 resource "google_service_account" "artifact_pusher" {
   project      = var.project_id
   account_id   = "istio-app-artifact-pusher"
@@ -21,4 +22,18 @@ resource "google_project_iam_member" "artifact_registry_writer" {
   role       = "roles/artifactregistry.writer"
   member     = "serviceAccount:${google_service_account.artifact_pusher.email}"
   depends_on = [google_service_account.artifact_pusher]
+}
+
+// For k3d
+resource "google_service_account" "artifact_reader" {
+  project      = var.project_id
+  account_id   = "istio-app-artifact-reader"
+  display_name = "Service Account for Kubernetes to pull images"
+}
+
+resource "google_project_iam_member" "artifact_registry_reader" {
+  project    = var.project_id
+  role       = "roles/artifactregistry.reader"
+  member     = "serviceAccount:${google_service_account.artifact_reader.email}"
+  depends_on = [google_service_account.artifact_reader]
 }
