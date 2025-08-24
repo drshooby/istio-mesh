@@ -30,5 +30,5 @@ echo "Service account key created at $KEY_PATH"
 gcloud auth activate-service-account --key-file "$KEY_PATH"
 gcloud auth configure-docker "${REGION}-docker.pkg.dev"
 
-# run: glcoud auth list to see the account in-use
+# run: gcloud auth list to see the account in-use
 echo "Docker is now authenticated with Artifact Registry in region $REGION"
