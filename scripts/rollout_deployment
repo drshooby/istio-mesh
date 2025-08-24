@@ -1,0 +1,15 @@
+#!/bin/bash
+set -euo pipefail
+
+# NOTE: confirm you have properly updated values.yaml for both services
+
+DEPLOYMENTS=("ms1" "ms2")
+NAMESPACE="app"
+
+for d in "${DEPLOYMENTS[@]}"; do
+  echo "Upgrading Helm chart for $d"
+  helm upgrade --install "$d" ../charts/"$d" -n "$NAMESPACE" -f ../charts/"$d"/values.yaml
+
+  echo "Rolling out Deployment: $d"
+  kubectl rollout status deployment "$d" -n "$NAMESPACE"
+done
