@@ -95,3 +95,5 @@ scripts/rollout_deployment
 kubectl port-forward -n app pod/<pod-name> 8000:8000
 # then access locally: curl http://localhost:8000/hello
 ```
+
+9. For Istio, I'd highly recommend watching this excellent video: https://www.youtube.com/watch?v=voAyroDb6xk
