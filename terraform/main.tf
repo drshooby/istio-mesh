@@ -10,7 +10,7 @@ terraform {
 
 // https://registry.terraform.io/providers/hashicorp/google/latest/docs
 provider "google" {
-  project = "Istio-practice"
+  project = var.project_id
   region  = "us-west1"
   // zone = ""
 }
