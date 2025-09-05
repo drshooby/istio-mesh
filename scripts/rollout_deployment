@@ -3,7 +3,7 @@ set -euo pipefail
 
 # NOTE: confirm you have properly updated values.yaml for both services
 
-DEPLOYMENTS=("ms1" "ms2")
+DEPLOYMENTS=("ms1" "ms2" "ui")
 NAMESPACE="app"
 
 for d in "${DEPLOYMENTS[@]}"; do
