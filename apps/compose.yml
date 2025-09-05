@@ -10,3 +10,15 @@ services:
     container_name: ms2
     ports:
       - "8001:8001"
+
+  # Note: ui will not be able to actually hit the microservices without a reverse proxy.
+  # It's more just to test what url is being hit here. Istio will take care of communication.
+
+  ui: 
+    build: ./ui
+    container_name: ui
+    ports:
+      - "3000:3000"
+    depends_on:
+      - ms1
+      - ms2
